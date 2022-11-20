@@ -9,4 +9,6 @@ django-admin startproject cados_api
 python3 manage.py startapp base
 python manage.py runserver
 pip install djangorestframework
+python manage.py makemigrations
+python manage.py migrate
 ```
