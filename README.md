@@ -7,4 +7,5 @@ source env/bin/activate
 pip install django
 django-admin startproject cados_api
 python3 manage.py startapp base
+python3 manage.py runserver
 ```
