@@ -17,7 +17,15 @@ def endpoints (request):
 @api_view(['GET'])
 def advocate_list (request):
     #data = ['Dennis', 'Tadas', 'Max']
-    advocates = Advocate.objects.all()
+    query = request.GET.get('query')
+
+    if query == None:
+        query = ''
+
+    print('Query: ',query)
+    #http://127.0.0.1:8000/advocates/?query=y
+    #advocates = Advocate.objects.all()
+    advocates = Advocate.objects.filter(username__icontains=query)
     serializer = AdvocateSerializer(advocates, many=True)
     return Response(serializer.data)
 
