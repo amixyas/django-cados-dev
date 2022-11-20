@@ -25,5 +25,6 @@ def advocate_list (request):
 
 @api_view(['GET'])
 def advocate_detail (request, username):
-    data = username
-    return Response(data)
+    advocate = Advocate.objects.get(username=username)
+    serializer = AdvocateSerializer(advocate, many=False)
+    return Response(serializer.data)
