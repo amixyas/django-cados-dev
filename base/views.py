@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.db.models import Q
 
 from rest_framework.views import APIView
+from django.http import Http404
 
 from .models import Advocate
 from .serializers import AdvocateSerializer
@@ -48,13 +49,26 @@ def advocate_list (request):
 
 class AdvocateDetail(APIView):
     
+
+    def get_object(self, username):
+        try:
+            return Advocate.objects.get(username=username)
+        except Advocate.DoesNotExist:
+            raise Http404
+
+
     def get(self, request, username):
-        advocate = Advocate.objects.get(username=username)
+        #advocate = Advocate.objects.get(username=username)
+        advocate = self.get_object(username)
+        
         serializer = AdvocateSerializer(advocate, many=False)
         return Response(serializer.data)
 
+
     def post(self, request, username):
-        advocate = Advocate.objects.get(username=username)
+        #advocate = Advocate.objects.getusername=username)        
+        advocate = self.get_object(username)
+
         advocate.username = request.data['username']
         advocate.bio = request.data['bio']
         advocate.save()
@@ -62,7 +76,9 @@ class AdvocateDetail(APIView):
         return Response(serializer.data)
 
     def delete(self, request, username):
-        advocate = Advocate.objects.get(username=username)
+        #advocate = Advocate.objects.getusername=username)        
+        advocate = self.get_object(username)
+        
         advocate.delete()
         return Response('user deleted')
 
