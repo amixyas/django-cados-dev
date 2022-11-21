@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -61,4 +61,6 @@ def advocate_detail (request, username):
         serializer = AdvocateSerializer(advocate, many=False)
         return Response(serializer.data)
 
-    #if request.method == 'DELETE':
+    if request.method == 'DELETE':
+        advocate.delete()
+        return Response('user deleted')
