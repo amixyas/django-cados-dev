@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Advocate
-from .serializers import AdvocateSerializer
 from django.db.models import Q
 
+from rest_framework.views import APIView
+
+from .models import Advocate
+from .serializers import AdvocateSerializer
 
 @api_view(['GET'])
 def endpoints (request):
@@ -44,7 +46,28 @@ def advocate_list (request):
 
 
 
+class AdvocateDetail(APIView):
+    
+    def get(self, request, username):
+        advocate = Advocate.objects.get(username=username)
+        serializer = AdvocateSerializer(advocate, many=False)
+        return Response(serializer.data)
 
+    def post(self, request, username):
+        advocate = Advocate.objects.get(username=username)
+        advocate.username = request.data['username']
+        advocate.bio = request.data['bio']
+        advocate.save()
+        serializer = AdvocateSerializer(advocate, many=False)
+        return Response(serializer.data)
+
+    def delete(self, request, username):
+        advocate = Advocate.objects.get(username=username)
+        advocate.delete()
+        return Response('user deleted')
+
+
+""" 
 @api_view(['GET', 'PUT', 'DELETE'])
 def advocate_detail (request, username):
 
@@ -64,3 +87,4 @@ def advocate_detail (request, username):
     if request.method == 'DELETE':
         advocate.delete()
         return Response('user deleted')
+ """
